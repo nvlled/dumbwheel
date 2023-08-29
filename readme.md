@@ -12,6 +12,8 @@ have a broken mouse wheel.
 
 ## Prerequisites
 
+- [go compiler](https://go.dev/dl/)
+- xmodmap
 - root permission
 - mouse must have thumb buttons
 
