@@ -17,7 +17,7 @@ have a broken mouse wheel.
 
 ## Install
 
-1. `$ go install github.com/nvlled/dumbwheel`
+1. `$ go install github.com/nvlled/dumbwheel@latest`
 2. Disable default mouse thumb button behaviour by
    adding these to your `~/.Xmodmap` file: (create if not existing)
    ```
