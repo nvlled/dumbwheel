@@ -1,9 +1,8 @@
 package mouse
 
-// #include <stdio.h>
-// #include <linux/joystick.h>
-// #include <linux/input.h>
 // #include <xdo.h>
+// #include <linux/input.h>
+// #cgo LDFLAGS: -lxdo
 import "C"
 import (
 	"fmt"
