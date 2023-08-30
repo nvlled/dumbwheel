@@ -10,12 +10,6 @@ import (
 	"unsafe"
 )
 
-func ruhOh(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
 type EventType int
 
 const (
@@ -165,4 +159,10 @@ func ReadEvents(filename string) <-chan Event {
 	}()
 
 	return ch
+}
+
+func ruhOh(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

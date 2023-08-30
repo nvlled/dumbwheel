@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"log/slog"
@@ -11,7 +13,48 @@ import (
 	"github.com/nvlled/dumbwheel/xdo"
 )
 
+func findMouseEventDevice() string {
+	dir := "/dev/input/by-id"
+	entries, err := os.ReadDir(dir)
+	ruhOh(err)
+	for _, entry := range entries {
+		if strings.HasSuffix(entry.Name(), "-event-mouse") {
+			return dir + "/" + entry.Name()
+		}
+	}
+
+	return ""
+}
+
+func usage() {
+	program := os.Args[0]
+	fmt.Printf("usage: %v [input event filename]\n", program)
+	fmt.Printf("if no filename is given, it will automatically look for one.\n")
+	fmt.Printf("\n")
+	fmt.Printf("Examples: %v /dev/input/10\n", program)
+	fmt.Printf("          %v /dev/input/by-id/usb-MOSART_Semi._2.4G_INPUT_DEVICE-if01-event-mouse\n", program)
+	fmt.Printf("          %v /dev/input/by-path/pci-0000:00:14.0-usb-0:2:1.1-event-mouse\n", program)
+	fmt.Printf("\n")
+	fmt.Printf("Note: when reading from /dev/input/by-id or /dev/input/by-path, look for filenames\n")
+	fmt.Printf("      that ends with '-event-mouse'\n")
+	os.Exit(1)
+}
+
 func main() {
+	deviceName := ""
+	if len(os.Args) < 2 {
+		deviceName = findMouseEventDevice()
+	} else {
+		deviceName = os.Args[1]
+	}
+
+	if deviceName == "" {
+		usage()
+	}
+
+	slog.Info("using input event device")
+	slog.Info(deviceName)
+
 	var programLevel = new(slog.LevelVar)
 	h := slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: programLevel})
 	slog.SetDefault(slog.New(h))
@@ -96,7 +139,7 @@ func main() {
 
 	loop = NewInterval(scrollScript.Update, 100*time.Millisecond)
 
-	for event := range mouse.ReadEvents("/dev/input/event10") {
+	for event := range mouse.ReadEvents(deviceName) {
 		if event.Type != mouse.EventOnMove || move == 0 {
 			slog.Debug("read mouse event", "data", event)
 		}
@@ -115,4 +158,10 @@ func main() {
 		}
 	}
 
+}
+
+func ruhOh(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
