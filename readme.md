@@ -14,6 +14,7 @@ have a broken mouse wheel.
 
 - [go compiler](https://go.dev/dl/)
 - xmodmap
+- libxdo-dev (on debian/ubuntu: apt install libxdo-dev)
 - root permission
 - mouse must have thumb buttons
 
